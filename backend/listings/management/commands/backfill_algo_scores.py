@@ -23,6 +23,7 @@ class Command(BaseCommand):
             listing.below_market = score_below_market(listing, neighborhood_avgs)
             listing.best_value = score_best_value(listing, neighborhood_avgs)
             listing.price_per_sqft = score_price_per_sqft(listing)
+            
             listings_to_update.append(listing)
 
         Listing.objects.bulk_update(listings_to_update, ['below_market', 'best_value', 'price_per_sqft'])
