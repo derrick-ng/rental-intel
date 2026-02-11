@@ -1,4 +1,3 @@
-# def score_best_value(price, sqft, location, bedrooms, parking, laundry_type, cats_allowed, dogs_allowed, data_quality):
 def score_best_value(listing_data, neighborhood_avgs):
     """
     ai weights
