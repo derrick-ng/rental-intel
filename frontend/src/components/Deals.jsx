@@ -134,7 +134,7 @@ export default function Deals() {
                             <div className="text-lg font-bold text-green-600">${deal.price.toLocaleString()}</div>
                             <div className="text-xs text-gray-500">Avg: ${deal.avg_price.toLocaleString()}</div>
                             <div className="text-xs font-medium text-green-600">
-                              Save ${deal.savings.toLocaleString()} ({deal.savings_percent}%)
+                              Save ${deal.savings.toLocaleString()} ({deal.percent_below_avg}%)
                             </div>
                           </div>
                         </div>

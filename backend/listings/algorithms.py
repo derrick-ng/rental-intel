@@ -51,38 +51,36 @@ def get_overall_best_value():
 
 def get_good_deals():
     stats = get_neighborhood_stats()
-
-    neighborhood_avgs = {}
-    for stat in stats:
-        neighborhood_avgs[stat['location']] = stat['avg_price']
-    
-    good_deals = []
+    neighborhood_avgs = {stat['location']: stat['avg_price'] for stat in stats}
 
     listings = Listing.objects.filter(
         active=True,
-        bedrooms__isnull=False)
-    
+    ).order_by('-below_market')[:10]
+
+    good_deals = []
+
     for listing in listings:
-        avg_price = neighborhood_avgs.get(listing.location)
+        location = listing.location
+        price = listing.price
 
-        #good deal starts at 90% of avg?
-        if avg_price and listing.price < avg_price * .9:
-            savings = avg_price - listing.price
-            good_deals.append({
-                'id': listing.id,                
-                'title': listing.title,
-                'price': listing.price,
-                'location': listing.location,
-                'avg_price': round(avg_price, 2),
-                'savings': round(savings, 2),
-                'savings_percent': round((savings / avg_price) * 100, 1),
-                'url': listing.url,
-            })
+        avg_price = neighborhood_avgs.get(location)
+        if not avg_price:
+            continue
 
-    good_deals.sort(key=lambda x: x['savings'], reverse=True)
+        savings = avg_price - price
 
-    print(f'--------get good deals: ----------\n{good_deals[:10]}')
-    return good_deals[:10]
+        good_deals.append({
+            'id': listing.id,                
+            'title': listing.title,
+            'price': price,
+            'location': location,
+            'avg_price': round(avg_price, 2),
+            'savings': round(savings, 2),
+            'percent_below_avg': round((avg_price - price) / avg_price * 100, 1),
+            'url': listing.url,
+        })
+    
+    return good_deals
 
 def get_best_price_per_sqft():
     listings = Listing.objects.filter(
