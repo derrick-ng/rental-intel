@@ -7,19 +7,19 @@ def score_best_value(listing_data, neighborhood_avgs):
     - Amenities (parking, laundry) (15%)
     - Data quality (10%)
     """
-    
-    if listing_data.bedrooms is None or listing_data.sqft is None or listing_data.sqft <= 0:
+
+    if listing_data.get('bedrooms') is None or listing_data.get('sqft') is None or listing_data.get('sqft', 0) <= 0:
         return 0
 
-    price = listing_data.price
-    sqft = listing_data.sqft
-    location = listing_data.location
-    bedrooms = listing_data.bedrooms
-    parking = listing_data.parking
-    laundry_type = listing_data.laundry_type
-    cats_allowed = listing_data.cats_allowed
-    dogs_allowed = listing_data.dogs_allowed
-    data_quality = listing_data.data_quality
+    price = listing_data['price']
+    sqft = listing_data['sqft']
+    location = listing_data['location']
+    bedrooms = listing_data['bedrooms']
+    parking = listing_data['parking']
+    laundry_type = listing_data['laundry_type']
+    cats_allowed = listing_data['cats_allowed']
+    dogs_allowed = listing_data['dogs_allowed']
+    data_quality = listing_data['data_quality']
 
     score = 0
 
@@ -110,8 +110,8 @@ def score_best_value(listing_data, neighborhood_avgs):
     return round(score)
 
 def score_below_market(listing_data, neighborhood_avgs):
-    location = listing_data.location
-    price = listing_data.price
+    location = listing_data['location']
+    price = listing_data['price']
 
     avg_price = neighborhood_avgs.get(location)
 
@@ -127,8 +127,8 @@ def score_below_market(listing_data, neighborhood_avgs):
     return round(percentage_below, 1)
 
 def score_price_per_sqft(listing_data):
-    price = listing_data.price
-    sqft = listing_data.sqft
+    price = listing_data['price']
+    sqft = listing_data['sqft']
 
     if not sqft or sqft <= 0:
         return 0
