@@ -65,13 +65,13 @@ class ETLTests(TestCase):
 
 class ScoringTests(TestCase):
     def test_score_price_per_sqft(self):
-        listing = Listing(price=1000, sqft=200)
+        listing = {'price': 1000, 'sqft': 200}
 
         score = score_price_per_sqft(listing)
         self.assertEqual(score, 5.0)
 
     def test_score_best_value(self):
-        listing = Listing(price=3000, sqft=850, location='Nob Hill', bedrooms=2, parking='off_street', laundry_type='in_unit', cats_allowed=True, dogs_allowed=True, data_quality=60)
+        listing = {'price': 3000, 'sqft': 850, 'location': 'Nob Hill', 'bedrooms': 2, 'parking':'off_street', 'laundry_type': 'in_unit', 'cats_allowed': True, 'dogs_allowed': True, 'data_quality': 60}
         neighborhood_avgs = {'Nob Hill': 3800}
 
         score = score_best_value(listing, neighborhood_avgs)
@@ -79,7 +79,7 @@ class ScoringTests(TestCase):
         self.assertEqual(score, 74)
     
     def test_score_below_market(self):
-        listing = Listing(location='Tenderloin', price=1672)
+        listing = {'location': 'Tenderloin', 'price': 1672}
         neighborhood_avgs = {'Tenderloin': 2000}
 
         score = score_below_market(listing, neighborhood_avgs)
