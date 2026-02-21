@@ -18,7 +18,6 @@ class Command(BaseCommand):
             bedrooms__isnull=False,
         )
 
-        print('-----starting scoring functions here-----')
         for listing in listings:
             listing.below_market = score_below_market(listing, neighborhood_avgs)
             listing.best_value = score_best_value(listing, neighborhood_avgs)
@@ -27,4 +26,3 @@ class Command(BaseCommand):
             listings_to_update.append(listing)
 
         Listing.objects.bulk_update(listings_to_update, ['below_market', 'best_value', 'price_per_sqft'])
-        print('------scoring finished------')
