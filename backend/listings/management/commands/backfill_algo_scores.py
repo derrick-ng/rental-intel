@@ -5,7 +5,6 @@ from listings.analytics import get_neighborhood_stats
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        print("backfill algo score start")
         listings_to_update = []
         neighborhood_stats = get_neighborhood_stats()
         neighborhood_avgs = {neighborhood['location']: neighborhood['avg_price'] for neighborhood in neighborhood_stats}
