@@ -135,7 +135,4 @@ def score_price_per_sqft(listing_data):
 
     price_per_sqft = price / sqft
 
-    if price_per_sqft < 1.50 or price_per_sqft > 6.00:
-        return 0
-
     return round(price_per_sqft, 2)
