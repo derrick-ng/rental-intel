@@ -69,7 +69,7 @@ class Listing(models.Model):
     #best deal scores
     best_value = models.IntegerField(default=0)
     below_market = models.IntegerField(default=0)
-    price_per_sqft = models.IntegerField(default=0)
+    price_per_sqft = models.DecimalField(default=0, max_digits=4, decimal_places=2)
 
     def __str__(self):
         return f"{self.title} - {self.price}"
