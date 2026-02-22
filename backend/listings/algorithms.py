@@ -85,31 +85,24 @@ def get_good_deals():
 def get_best_price_per_sqft():
     listings = Listing.objects.filter(
         active=True,
-        bedrooms__isnull=False,
         sqft__isnull=False,
-        sqft__gt=0,
-    )
+        price__isnull=False,
+        price_per_sqft__gt=0,
+    ).order_by('price_per_sqft')[:10]
 
     best_deals = []
 
     for listing in listings:
-        price_per_sqft = listing.price / listing.sqft
-
-        if price_per_sqft < 1.50 or price_per_sqft > 6.00:
-            continue
-            
         best_deals.append({
             'id': listing.id,
             'title': listing.title,
             'price': listing.price,
             'sqft': listing.sqft,
-            'price_per_sqft': round(price_per_sqft, 2),
+            'price_per_sqft': round(listing.price_per_sqft, 2),
             'bedrooms': listing.bedrooms,
             'bathrooms': float(listing.bathrooms) if listing.bathrooms else None,
             'location': listing.location,
             'url': listing.url,
         })
-
-    best_deals.sort(key=lambda x: x['price_per_sqft'])
-
-    return best_deals[:10]
+    
+    return best_deals
