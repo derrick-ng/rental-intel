@@ -3,7 +3,7 @@ from listings.serializers import ListingSerializer
 from bs4 import BeautifulSoup
 import os, requests, time, random
 
-def find_inactive_listings(order_by=None):
+def find_inactive_listings(order_by=None, limit=10):
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
     }
@@ -19,18 +19,22 @@ def find_inactive_listings(order_by=None):
     inactive_ids = []
 
     for listing in listings:
-        if active_listings >= 10:
+        if active_listings >= limit:
             break
 
         time.sleep(random.uniform(3, 5))
 
-        print(f'[{active_listings} active] Checking: {listing.url}')
+        print(f'[{active_listings}/{limit}] Checking: {listing.url}')
 
         try:
             response = requests.get(listing.url, headers=headers, timeout=10)
-            response.raise_for_status()
+
+            if response.status_code in [404, 410]:
+                print(f'Listing removed (HTTP {response.status_code})')
+                inactive_ids.append(listing.craigslist_id)
+                continue
         except Exception as e:
-            print(f'Error fetching inactive listing: {e}')
+            print(f'Error fetching listing: {e}')
             continue
 
         soup = BeautifulSoup(response.content, 'lxml')
