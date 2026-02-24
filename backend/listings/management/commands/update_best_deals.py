@@ -1,21 +1,5 @@
 from django.core.management.base import BaseCommand
-from listings.models import Listing
 from listings.utils import find_inactive_listings, mark_inactive_in_development, mark_inactive_in_production
-from bs4 import BeautifulSoup
-import requests, time, random
-
-# base command - makes sure each best deals section has 10 fresh listings
-# add to celery to run once a day, after daily scraper
-
-# Implementation:
-# go through each best deal category individually
-    # query for each section - find all listings (active), sort in descending order (best first)
-# check each listing for inactivity
-    # get request to listing.url
-    # if inactive: store listing.id
-    # if active: do nothing, increment counter
-        # counter to keep track until 10 listings are found
-# bulk update all inactive listings to inactive
     
 class Command(BaseCommand):
     headers = {
