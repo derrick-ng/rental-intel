@@ -7,13 +7,13 @@ def mark_inactive_in_production(inactive_ids):
         print('No listings marked as inactive')
         return
 
-    prod_url = os.getenv('PRODUCTION_API_URL')
+    PROD_URL = os.getenv('PRODUCTION_API_URL')
 
     try:
         print(f'Marking {len(inactive_ids)} listings as inactive in production')
 
         response = requests.post(
-            f'{prod_url}/api/listings/mark_inactive/',
+            f'{PROD_URL}/api/listings/mark_inactive/',
             json={'craigslist_ids': inactive_ids}
         )
 
@@ -29,7 +29,7 @@ def mark_inactive_in_production(inactive_ids):
         
 
 def sync_new_listings_to_production():
-    prod_url = os.getenv('PRODUCTION_API_URL')
+    PROD_URL = os.getenv('PRODUCTION_API_URL')
 
     try:
         listings = Listing.objects.filter(
@@ -41,7 +41,7 @@ def sync_new_listings_to_production():
         print(f'Syncing {len(data)} listings to production')
 
         response = requests.post(
-            f'{prod_url}/api/listings/bulk_create_listings/',
+            f'{PROD_URL}/api/listings/bulk_create_listings/',
             json=data
         )
 
