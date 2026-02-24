@@ -1,3 +1,5 @@
+from listings.models import Listing
+from listings.serializers import ListingSerializer
 import os, requests
 
 def mark_inactive_in_production(inactive_ids):
@@ -27,4 +29,29 @@ def mark_inactive_in_production(inactive_ids):
         
 
 def sync_new_listings_to_production():
-    pass
+    prod_url = os.getenv('PRODUCTION_API_URL')
+
+    try:
+        listings = Listing.objects.filter(
+            active=True
+        )
+        serializer = ListingSerializer(listings, many=True)
+        data = serializer.data
+
+        print(f'Syncing {len(data)} listings to production')
+
+        response = requests.post(
+            f'{prod_url}/api/listings/bulk_create_listings/',
+            json=data
+        )
+
+        status_code = response.status_code
+        if status_code == 200:
+            result = response.json()
+            print(f"PRODUCTION: Created: {result['created']}")
+            print(f"PRODUCTION: Updated: {result['updated']}")
+        else:
+            print(f'Production new listing sync failed: {status_code}')
+
+    except Exception as e:
+        print(f'Production new listing sync error: {e}')

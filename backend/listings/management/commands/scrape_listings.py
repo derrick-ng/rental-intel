@@ -5,8 +5,8 @@ from listings.etl import clean_listings_data
 from listings.geocoding import geocode_address
 from listings.score_listing import score_best_value, score_below_market, score_price_per_sqft
 from listings.analytics import get_neighborhood_stats
-from listings.serializers import ListingSerializer
-import time, requests, os
+from listings.utils import sync_new_listings_to_production
+import time
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
@@ -64,39 +64,4 @@ class Command(BaseCommand):
             )
         )
     
-        self.sync_to_production()
-
-    def sync_to_production(self):
-        prod_url = os.getenv('PRODUCTION_API_URL')
-
-        try:
-            listings = Listing.objects.filter(active=True)
-
-            serializer = ListingSerializer(listings, many=True)
-            data = serializer.data
-
-            self.stdout.write(f"\nSyncing {len(data)} listings to production...")
-
-            response = requests.post(
-                f'{prod_url}/api/listings/bulk_create_listings/',
-                json=data
-            )
-
-            if response.status_code == 200:
-                result = response.json()
-                self.stdout.write(
-                    self.style.SUCCESS(
-                        f"PRODUCTION: Created {result['created']}, "
-                        f"Updated {result['updated']}"
-                    )
-                )
-            else:
-                self.stdout.write(
-                    self.style.ERROR(
-                        f"Production sync failed: {response.status_code} - {response.text}"
-                    )
-                )
-        except Exception as e:
-            self.stdout.write(
-                self.style.ERROR(f"Production sync error: {str(e)}")
-            )
+        sync_new_listings_to_production()
