@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from listings.models import Listing
+from listings.utils import find_inactive_listings, mark_inactive_in_development, mark_inactive_in_production
 from bs4 import BeautifulSoup
 import requests, time, random
 
@@ -25,42 +26,10 @@ class Command(BaseCommand):
         self.clean_below_market_deals()
 
     def clean_below_market_deals(self):
-        listings = Listing.objects.filter(
-            active=True,
-        ).order_by('-below_market')
+        inactive_ids = find_inactive_listings(order_by='-below_market')
 
-        active_listings = 0
-        inactive_listings = []
-
-        for listing in listings:
-            if active_listings >= 10:
-                break
-            
-            time.sleep(random.uniform(3, 5))
-
-            print(f'[{active_listings}/10] Checking: {listing.url}')
-
-            try:
-                response = requests.get(listing.url, headers=self.headers, timeout=10)
-                response.raise_for_status()
-            except Exception as e:
-                print(f"Error fetching {listing.url}: {e}")
-                continue
-            
-            soup = BeautifulSoup(response.content, 'lxml')
-            removed = soup.find('div', id='has_been_removed')
-
-            if removed:
-                print(f'Listing has been flagged/removed')
-                inactive_listings.append(listing.id)
-                continue
-            
-            print('Listing is active')
-            active_listings += 1
-        
-        Listing.objects.filter(
-            id__in=inactive_listings
-        ).update(active=False)
+        mark_inactive_in_development(inactive_ids)
+        mark_inactive_in_production(inactive_ids)
 
         print('Below Market deals data refreshed')
 
