@@ -20,6 +20,7 @@ class Command(BaseCommand):
         for index, listing in enumerate(listings, 1):
             try:
                 self.stdout.write(f"[{index}/{total}] Checking: {listing.url}")
+                time.sleep(random.uniform(1.5, 3))
 
                 details = scrape_listing_details(listing.url)
 
@@ -32,12 +33,9 @@ class Command(BaseCommand):
                     listing.save()
                     new_inactive += 1
                     inactive_ids.append(listing.craigslist_id)
-                    time.sleep(random.uniform(1.5, 3))
                     continue
             
                 unchanged += 1
-
-                time.sleep(random.uniform(1.5, 3))
                 
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Error checking: {e}"))
