@@ -1,8 +1,6 @@
 from django.test import TestCase
-import pandas as pd
 from .etl import clean_listings_data, standardize_location, calculate_quality_score
 from .score_listing import score_price_per_sqft, score_below_market, score_best_value
-from listings.models import Listing
 
 # Create your tests here.
 class ETLTests(TestCase):
