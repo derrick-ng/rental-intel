@@ -4,7 +4,10 @@ from .models import Listing
 def get_neighborhood_stats():
     stats = Listing.objects.filter(
         active=True,
-        bedrooms__isnull=False
+        bedrooms__isnull=False,
+        price__gte=1000,
+        price__lte=6000,
+        data_quality__gte=50,
     ).values('location').annotate(
         avg_price=Avg('price'),
         median_bedrooms=Avg('bedrooms'),
