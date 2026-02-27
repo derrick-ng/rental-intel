@@ -43,7 +43,8 @@ def get_overall_best_value():
             'laundry_type': listing.laundry_type,
             'url': listing.url,
             'total_score': round(listing.best_value, 1),
-            'details': details
+            'details': details,
+            'percent_below_avg': round((avg_price - price) / avg_price * 100, 1),
         })
 
     return scored_listings

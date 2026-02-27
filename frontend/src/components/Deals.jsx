@@ -79,7 +79,7 @@ export default function Deals() {
                             <div className="flex gap-4 text-xs text-gray-600 mt-2">
                               <span>${deal.details.price_per_sqft}/sqft</span>
                               <span>${deal.details.price_per_bedroom}/BR</span>
-                              {deal.details.percent_below_avg && <span>{deal.details.percent_below_avg}% below neighborhood avg</span>}
+                              {deal.percent_below_avg && <span>{deal.percent_below_avg}% below neighborhood avg</span>}
                             </div>
                             {(deal.parking || deal.laundry_type) && (
                               <div className="flex gap-3 text-xs text-gray-500 mt-1">
