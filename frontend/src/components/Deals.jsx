@@ -191,6 +191,23 @@ export default function Deals() {
             </div>
           )}
         </div>
+
+        <div className="bg-white rounded-lg shadow-sm mb-6">
+          <button type="button" className="w-full flex items-center justify-between px-6 py-4 text-left">
+            <span className="text-xl font-bold text-gray-900">Best Deals For You (AI Powered) *In The Works*</span>
+          </button>
+          <div className="border-t border-gray-200 p-6">
+            <div className="border border-gray-200 rounded-lg hover:shadow-gray-300 hover:shadow-sm">
+              <textarea
+                placeholder="Describe what you are looking for and AI will find the best matches"
+                className="p-2 w-full h-20 outline-none"
+              ></textarea>
+            </div>
+            <div className="text-right py-2">
+              <button className="bg-blue-500 text-white px-2 py-1 rounded-lg hover:bg-blue-300">Search</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
